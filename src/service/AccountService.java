@@ -3,6 +3,7 @@ package service;
 import javax.swing.JOptionPane;
 
 import domain.AccountBean;
+import domain.MinusAccountBean;
 
 public interface AccountService {
 	public void createAccount(AccountBean aa);
@@ -11,6 +12,10 @@ public interface AccountService {
 			public String createAccountNum(String random);
 			public String createRandom(int start,int end);
 			public String createDate();
-			public String showResult();
 			public AccountBean findById(AccountBean aa);
+			public AccountBean[] findByName(String name);
+			public int countSameWord(String word);
+			public AccountBean[] minusList();
+			public void createMinusAccount(AccountBean ma);
+			
 }
