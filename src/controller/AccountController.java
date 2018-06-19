@@ -6,14 +6,13 @@ import service.AccountService;
 import serviceImpl.AccountServiceImpl;
 
 enum AccountButt1 {
-	EXIT, ACCOUNT, MINUS_ACCOUNT, DEPOSIT, WITHDRAW, LIST, MINUS_LIST, FIND_BY_ID, FIND_BY_NAME
+	EXIT, ACCOUNT, MINUS_ACCOUNT, DEPOSIT, WITHDRAW, LIST, MINUS_LIST, FIND_BY_ID, FIND_BY_NAME, CHANGE_PASS, DELETE_ACCOUNT
 }
 
 public class AccountController {
-
 	public static void main(String[] args) {
 		AccountButt1[] buttons = { AccountButt1.EXIT, AccountButt1.ACCOUNT, AccountButt1.MINUS_ACCOUNT,
-				AccountButt1.DEPOSIT, AccountButt1.WITHDRAW, AccountButt1.LIST, AccountButt1.MINUS_LIST ,AccountButt1.FIND_BY_ID, AccountButt1.FIND_BY_NAME
+				AccountButt1.DEPOSIT, AccountButt1.WITHDRAW, AccountButt1.LIST, AccountButt1.MINUS_LIST ,AccountButt1.FIND_BY_ID, AccountButt1.FIND_BY_NAME , AccountButt1.CHANGE_PASS, AccountButt1.DELETE_ACCOUNT
 
 		};
 		// Account account = null;
@@ -44,7 +43,7 @@ public class AccountController {
 				account.setUid(JOptionPane.showInputDialog("아디"));
 				account.setPass(JOptionPane.showInputDialog("패스"));
 				((MinusAccountBean) account).setLimit(Integer.parseInt(JOptionPane.showInputDialog("한도?")));
-				service.createMinusAccount(account);
+				service.createAccount(account);
 				break;
 			case LIST:
 				JOptionPane.showMessageDialog(null, service.list());
@@ -66,8 +65,25 @@ public class AccountController {
 				
 				 JOptionPane.showMessageDialog(null, service.findByName(JOptionPane.showInputDialog("NAME")));
 				break;
+			case CHANGE_PASS:
+				account= new AccountBean();
+				account.setUid(JOptionPane.showInputDialog("아이디"));
+				account.setPass(JOptionPane.showInputDialog("비밀번호")+"/"+JOptionPane.showInputDialog("새 비밀번호"));
+				// ID, PASS, NEW PASS
+				JOptionPane.showMessageDialog(null, service.changePass(account));
+				 break;
+			case DELETE_ACCOUNT:
+				String id = "";
+				String pass ="";
+				String confirmPass = "";
+				account=new AccountBean();
+				account.setUid(JOptionPane.showInputDialog("Id?"));
+				 account.setPass(JOptionPane.showInputDialog("Pass?") + "/" + JOptionPane.showInputDialog("진짜로?"));
+	
+				JOptionPane.showMessageDialog(null,service.deleteAccount(account));
+	//계좌 삭제 후 총계좌수가 1 감소해야함.
+			break;
 			}
 		}
 	}
-
 }

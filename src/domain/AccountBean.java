@@ -65,7 +65,7 @@ public class AccountBean {
 
 
 	public String toString() {
-		return String.format("%s \n %s \n 이름: %s\n 계좌번호: %s\n 생성날짜: %s\n ID: %s \n Pass: ****** \n ", BANK_NAME, ACCOUNT_TYPE, name, accountNum,
-				createDate, uid);
+		return String.format("%s \n %s \n 이름: %s\n 계좌번호: %s\n 생성날짜: %s\n ID: %s \n Pass: %s \n ", BANK_NAME, ACCOUNT_TYPE, name, accountNum,
+				createDate, uid, pass);
 	}
 }

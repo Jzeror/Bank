@@ -7,12 +7,14 @@ import domain.MinusAccountBean;
 import service.AccountService;
 
 public class AccountServiceImpl implements AccountService {
-	private AccountBean[] list; //
-	private int count;
+	private AccountBean[] list, minusList; //
+	private int count, minusCount;
 
 	public AccountServiceImpl() { // 생성자.
-		list = new AccountBean[100000];
+		list = new AccountBean[5];
 		count = 0;
+		minusList = new AccountBean[5];
+		minusCount = 0;
 	}
 
 	@Override
@@ -28,13 +30,27 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public void addList(AccountBean account) {
 		list[count++] = account;
+		if (account instanceof MinusAccountBean) {
+			minusList[minusCount++] = account;
+		}
 	}
 
-	
 	@Override
 	public AccountBean[] list() {
+System.out.println("배열의 카운트 : "+count);
+String res="";
+for(int i=0; i<list.length;i++) {
+	res+= list[i]+"\n";
+	System.out.println("배열 내부"+res);
 	
+}
 		return list;
+	}
+
+	@Override
+	public AccountBean[] minusList() {
+
+		return minusList;
 	}
 
 	@Override
@@ -62,7 +78,6 @@ public class AccountServiceImpl implements AccountService {
 	public String createDate() {
 		return new SimpleDateFormat("yyyy년 MM월 dd일").format(new Date());
 	}
-
 
 	@Override
 	public AccountBean findById(AccountBean aa) {
@@ -94,9 +109,7 @@ public class AccountServiceImpl implements AccountService {
 		}
 		return account;
 	}
- 
 
-	
 	@Override
 	public int countSameWord(String word) {
 		int temp = 0;
@@ -109,24 +122,64 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public AccountBean[] minusList() {
-		AccountBean[] minusAccount=new AccountBean[100];
-		int d=0;
-		for(int i=0; i<count ; i++) {
-			if(list[i].getAccountType().equals(MinusAccountBean.ACCOUNT_TYPE )) {
-				minusAccount[d++]=list[i];
+	public String changePass(AccountBean account) {
+		String msg = "";
+		// String id = account.getUid();
+		String pass = account.getPass().split("/")[0];
+		String newPass = account.getPass().split("/")[1];
+		account.setPass(pass);
+		account = findById(account);
+		if (account.getUid() == null) {
+			msg = "변경실패";
+		} else {
+			if (pass.equals(newPass)) {
+				msg = "변경실패";
+			} else {
+				account.setPass(newPass);
+				msg = "ㅇㅋ";
 			}
-		}System.out.println(list[0].getAccountType() );
-		return minusAccount;
-	}
+		}
 
+		/*
+		 * if (account.getNewPass().equals(account.getPass())) { msg = "동일pass 변경 불가"; }
+		 * else {
+		 * 
+		 * if (aa.getPass().equals(account.getPass())) {
+		 * aa.setPass(account.getNewPass()); msg = "변경 완료"; } else { msg =
+		 * "id/pass를 확인해주세요"; } }
+		 */ // 성공 : 변경 완료
+			// 실패 : 변경 실패. 현재 pass와 같다면.
+		return msg;
+	}
 	@Override
-	public void createMinusAccount(AccountBean ma) {
-		createAccount(ma);
-		ma.setLimit(ma.limit);
-		
+	public String deleteAccount(AccountBean account) {
+		String msg = "";
+		String pass = account.getPass().split("/")[0];
+		String confirmPass = account.getPass().split("/")[1];
+		int idx=0;
+		for(int i=0; i<count ; i++) {
+			if(account.getUid().equals(list[i].getUid())&& pass.equals(list[i].getPass())) {
+				idx=i; break;
+			}
+		}
+		if (account.getUid() == null) {
+			msg = "계정을 찾을 수 없습니다";
+		} else {
+			if (pass.equals(confirmPass)) {
+				list[idx]=null;
+				list[idx]=list[count-1];
+				list[count-1]=null;
+				/*for(int i=idx;i<count-1 ; i++) {      <--순서대로 채우기. 위에는 그냥 끝값으로 채우기
+					list[i]=list[i+1];
+					if(i==count-2) {list[count-1]=null;}      
+				}*/
+				msg = "삭제 성공";
+			} else {
+				msg = "비밀번호 다름";
+			}
+		}
+		count--;
+		return msg;
 	}
 
-
-	
 }
