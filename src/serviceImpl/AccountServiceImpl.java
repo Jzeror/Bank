@@ -37,13 +37,13 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public AccountBean[] list() {
-System.out.println("배열의 카운트 : "+count);
-String res="";
-for(int i=0; i<list.length;i++) {
-	res+= list[i]+"\n";
-	System.out.println("배열 내부"+res);
-	
-}
+		System.out.println("배열의 카운트 : " + count);
+		String res = "";
+		for (int i = 0; i < list.length; i++) {
+			res += list[i] + "\n";
+			System.out.println("배열 내부" + res);
+
+		}
 		return list;
 	}
 
@@ -140,46 +140,28 @@ for(int i=0; i<list.length;i++) {
 			}
 		}
 
-		/*
-		 * if (account.getNewPass().equals(account.getPass())) { msg = "동일pass 변경 불가"; }
-		 * else {
-		 * 
-		 * if (aa.getPass().equals(account.getPass())) {
-		 * aa.setPass(account.getNewPass()); msg = "변경 완료"; } else { msg =
-		 * "id/pass를 확인해주세요"; } }
-		 */ // 성공 : 변경 완료
-			// 실패 : 변경 실패. 현재 pass와 같다면.
+		// 성공 : 변경 완료
+		// 실패 : 변경 실패. 현재 pass와 같다면.
 		return msg;
 	}
+
 	@Override
 	public String deleteAccount(AccountBean account) {
 		String msg = "";
 		String pass = account.getPass().split("/")[0];
 		String confirmPass = account.getPass().split("/")[1];
-		int idx=0;
-		for(int i=0; i<count ; i++) {
-			if(account.getUid().equals(list[i].getUid())&& pass.equals(list[i].getPass())) {
-				idx=i; break;
-			}
-		}
 		if (account.getUid() == null) {
-			msg = "계정을 찾을 수 없습니다";
-		} else {
-			if (pass.equals(confirmPass)) {
-				list[idx]=null;
-				list[idx]=list[count-1];
-				list[count-1]=null;
-				/*for(int i=idx;i<count-1 ; i++) {      <--순서대로 채우기. 위에는 그냥 끝값으로 채우기
-					list[i]=list[i+1];
-					if(i==count-2) {list[count-1]=null;}      
-				}*/
-				msg = "삭제 성공";
-			} else {
+			msg = "계정을 찾을 수 없습니다";}
+		for (int i = 0; i < count; i++) {
+			if (account.getUid().equals(list[i].getUid()) && pass.equals(list[i].getPass())&&pass.equals(confirmPass)) {
+				list[i] = list[--count];
+				list[count] = null;
+				msg = "삭제 성공";				
+				break;
+			}else{
 				msg = "비밀번호 다름";
 			}
-		}
-		count--;
+		}		
 		return msg;
 	}
-
 }
